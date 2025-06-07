@@ -1,28 +1,25 @@
-import telebot
-import os
-import random
-
-print(os.listdir('images'))
-bot = telebot.TeleBot("8122935038:AAFOtV7uLe5J-Xao5ussiXjE9Ap0PeaC7dc")
-
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message, "Привет! Я твой Telegram бот. Напиши что-нибудь!")
-
 @bot.message_handler(commands=['hello'])
 def send_hello(message):
     bot.reply_to(message, "Привет! Как дела?")
-
 @bot.message_handler(commands=['bye'])
 def send_bye(message):
     bot.reply_to(message, "Пока! Удачи!")
-
-
 @bot.message_handler(commands=['mem'])
 def send_mem(message):
-    images = os.listdir("images")
-    img_name = random.choice(images)
-    with open(f'images/{img_name}', 'rb') as f:  
-        bot.send_photo(message.chat.id, f)    
-
+    rnd = random.randint(1, 100)
+    if rnd <= 60:
+        img_name = "image1.jpg"
+    elif rnd <= 90:
+        img_name = "image2.jpg"
+    elif rnd <= 99:
+        img_name = "image3.jpg"
+    else:
+        images = os.listdir("images")
+        other_images = [i for i in images if i not in {"image1.jpg", "image2.jpg", "image3.jpg"}]
+        if other_images:
+            img_name = random.choice(other_images)
+        else:
+            img_name = "image1.jpg"
+    with open(f'images/{img_name}', 'rb') as f:
+        bot.send_photo(message.chat.id, f)
 bot.polling()
